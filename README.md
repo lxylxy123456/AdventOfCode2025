@@ -6,6 +6,7 @@
 
 | day | question | example | input | solution | Youtube | other |
 |-----|----------|---------|-------|----------|---------|----------|
+|[d01](d01)|[q.txt](d01/q.txt)|[ex.txt](d01/ex.txt)|[in.txt](d01/in.txt)|[s.py](d01/s.py)|||
 
 ## My time
 
