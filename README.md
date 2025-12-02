@@ -7,6 +7,7 @@
 | day | question | example | input | solution | Youtube | other |
 |-----|----------|---------|-------|----------|---------|----------|
 |[d01](d01)|[q.txt](d01/q.txt)|[ex.txt](d01/ex.txt)|[in.txt](d01/in.txt)|[s.py](d01/s.py)|[`0urvitGbkn8`](https://youtu.be/0urvitGbkn8)||
+|[d02](d02)|[q.txt](d02/q.txt)|[ex.txt](d02/ex.txt)|[in.txt](d02/in.txt)|[s.py](d02/s.py)|[`DjKDlxO6K24`](https://youtu.be/DjKDlxO6K24)||
 
 ## My time
 
