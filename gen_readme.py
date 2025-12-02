@@ -1,9 +1,9 @@
 import os, re, jinja2
 
 t = jinja2.Template('''
-# Advent of Code 2024
+# Advent of Code 2025
 
-<https://adventofcode.com/2024>
+<https://adventofcode.com/2025>
 
 ## Files
 
@@ -49,7 +49,7 @@ def get_youtube_link(d):
 		open(readme_path, 'w').write(readme_content)
 	return file_link('https://youtu.be/%s' % link, '`%s`' % link)
 
-for i in range(1, 26):
+for i in range(1, 13):
 	d = 'd%02d' % i
 	if not os.path.exists(d):
 		print('Does not exist:', repr(d))
