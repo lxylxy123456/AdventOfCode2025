@@ -1,1 +1,6 @@
-TODO
+These are your personal leaderboard times:
+
+Day   -Part 1-   -Part 2-
+  3   00:04:02   00:06:42
+  2   00:04:53   00:09:13
+  1   22:03:15   22:09:13
