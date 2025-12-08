@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/y3iskSW1zuo
+
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter, deque
 #sys.setrecursionlimit(100000000)
@@ -57,7 +59,8 @@ def part_1(lines):
 	groups = Counter()
 	for i in range(len(ufs)):
 		groups[find(i)] += 1
-	return functools.reduce(operator.mul, map(lambda x: x[1], groups.most_common(3)))
+	common = groups.most_common(3)
+	return functools.reduce(operator.mul, map(lambda x: x[1], common))
 
 def part_2(lines):
 	s = 0
