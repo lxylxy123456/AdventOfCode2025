@@ -18,7 +18,6 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-1', '--one', action='store_true', help='Only part 1')
 	parser.add_argument('-2', '--two', action='store_true', help='Only part 2')
-	parser.add_argument('--fast', action='store_true', help='Skip part_2_bad')
 	parser.add_argument('input_file', nargs='?')
 	args = parser.parse_args()
 	if args.input_file is not None:
@@ -29,10 +28,7 @@ def main():
 	if not args.two:
 		print(part_1(lines))
 	if not args.one:
-		ans = part_2(lines)
-		if not args.fast:
-			assert ans == part_2_bad(lines)
-		print(ans)
+		print(part_2(lines))
 
 def part_1(lines):
 	s = 0
@@ -58,77 +54,18 @@ def cross(ax, ay, bx, by, mx, my, nx, ny):
 		return cross(ay, ax, by, bx, my, mx, ny, nx)
 	assert ay == by
 	assert mx == nx
-	if min(my, ny) < ay < max(my, ny):
+	if min(my, ny) < ay < max(mx, nx):
 		if min(ax, bx) < mx < max(ax, bx):
 			return True
 	return False
 
 def part_2_bad(lines):
-	# Solve using geometry
 	s = 0
 	p = []
 	for i in lines:
 		p.append(tuple(map(int, i.split(','))))
-	# p == [(7, 1), (11, 1), (11, 7), (9, 7), (9, 5), (2, 5), (2, 3), (7, 3)]
-	# p is circular. Move it such that p[0][0] is minimum.
-	index, _ = min(enumerate(p), key=lambda x: x[1])
-	p = p[index:] + p[:index]
-	# p == [(2, 3), (7, 3), (7, 1), (11, 1), (11, 7), (9, 7), (9, 5), (2, 5)]
-	d = []
-	for i in p:
-		d.append([0, 0])
-	# For p[0][0] and p[-1][0], we definitely want to decrease.
-	# out converts direction of segment to direction to outer space.
-	assert p[-1][0] == p[0][0]
-	d[0][0] = d[-1][0] = -1
-	if p[-1][1] < p[1][1]:
-		# Clockwise
-		out = {'l': 'd', 'r': 'u', 'u': 'l', 'd': 'r'}
-	elif p[-1][1] > p[1][1]:
-		# Counter-clockwise
-		out = {'l': 'u', 'r': 'd', 'u': 'r', 'd': 'l'}
-	else:
-		raise ValueError
-	for index, ((ix, iy), (jx, jy)) in enumerate(zip(p[:-1], p[1:])):
-		assert xor(ix == jx, iy == jy)
-		if iy == jy:
-			if ix < jx:
-				cur = 'd'
-			else:
-				cur = 'u'
-		else:
-			assert ix == jx
-			if iy < jy:
-				cur = 'r'
-			else:
-				cur = 'l'
-		o = out[cur]
-		if o == 'r':
-			d[index][1] = d[index + 1][1] = 1
-		elif o == 'l':
-			d[index][1] = d[index + 1][1] = -1
-		elif o == 'u':
-			d[index][0] = d[index + 1][0] = -1
-		elif o == 'd':
-			d[index][0] = d[index + 1][0] = 1
-	# d == [[-1, -1], [-1, -1], [-1, -1], [1, -1], [1, 1], [-1, 1], [-1, 1],
-	#		[-1, 1]]
-	f = lambda x, y: x * 10 + y
-	pp = list(map(lambda x, y: tuple(map(f, x, y)), p, d))
-	# pp == [(19, 29), (69, 29), (69, 9), (111, 9), (111, 71), (89, 71),
-	#		 (89, 51), (19, 51)]
-	p = list(map(lambda x: tuple(map(lambda x: x * 10, x)), p))
-	# p == [(20, 30), (70, 30), (70, 10), (110, 10), (110, 70), (90, 70),
-	#		(90, 50), (20, 50)]
-	if not 'plot':
-		from matplotlib import pyplot as plt
-		plt.plot(list(map(operator.itemgetter(0), pp + [pp[0]])),
-				 list(map(operator.itemgetter(1), pp + [pp[0]])))
-		plt.plot(list(map(operator.itemgetter(0), p + [p[0]])),
-				 list(map(operator.itemgetter(1), p + [p[0]])))
-		plt.show()
 	edge = []
-	for i, j in zip(pp, pp[1:] + [pp[0]]):
+	for i, j in zip(p, p[1:] + [p[0]]):
 		edge.append((i, j))
 	def test(ix, iy, jx, jy):
 		for (ax, ay, bx, by) in [
@@ -143,14 +80,14 @@ def part_2_bad(lines):
 			for (mx, my), (nx, ny) in edge:
 				assert xor(mx == nx, my == ny)
 				if cross(ax, ay, bx, by, mx, my, nx, ny):
-					#print(ix, iy, jx, jy, (ax, ay, bx, by, mx, my, nx, ny))
 					return False
 		return True
 	for index, (ix, iy) in enumerate(p):
 		for (jx, jy) in p[:index]:
 			if test(ix, iy, jx, jy):
-				s = max(s, (abs(ix - jx) + 10) * (abs(iy - jy) + 10))
-	return s // 100
+				print(ix, iy, jx, jy, (abs(ix - jx) + 1) * (abs(iy - jy) + 1))
+				s = max(s, (abs(ix - jx) + 1) * (abs(iy - jy) + 1))
+	return s
 
 ###
 
