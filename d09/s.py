@@ -57,7 +57,7 @@ def cross(ax, ay, bx, by, mx, my, nx, ny):
 			return True
 	return False
 
-def part_2(lines):
+def part_2_bad(lines):
 	s = 0
 	p = []
 	for i in lines:
@@ -84,6 +84,83 @@ def part_2(lines):
 		for (jx, jy) in p[:index]:
 			if test(ix, iy, jx, jy):
 				print(ix, iy, jx, jy, (abs(ix - jx) + 1) * (abs(iy - jy) + 1))
+				s = max(s, (abs(ix - jx) + 1) * (abs(iy - jy) + 1))
+	return s
+
+###
+
+def build_segments(nums):
+	segments = []
+	revmap = {}
+	n = sorted(set(nums))
+	n.insert(0, n[0] - 1)
+	n.append(n[-1] + 1)
+	prev = None
+	for i in n:
+		if prev and prev < i - 1:
+			segments.append((prev + 1, i - 1))
+		revmap[i] = len(segments)
+		segments.append((i, i))
+		prev = i
+	return segments, revmap
+
+def minmax(a, b):
+	return min(a, b), max(a, b)
+
+def part_2(lines):
+	s = 0
+	p = []
+	for i in lines:
+		p.append(tuple(map(int, i.split(','))))
+	sx, rx = build_segments(map(operator.itemgetter(0), p))
+	sy, ry = build_segments(map(operator.itemgetter(1), p))
+	SX = len(sx)
+	SY = len(sy)
+	m = []
+	for x in range(SX):
+		m.append([])
+		for y in range(SY):
+			m[-1].append('/')
+	for x, y in p:
+		m[rx[x]][ry[y]] = '#'
+	for (x0, y0), (x1, y1) in zip(p, p[1:] + [p[0]]):
+		x0_, x1_ = minmax(rx[x0], rx[x1])
+		y0_, y1_ = minmax(ry[y0], ry[y1])
+		for x in range(x0_, x1_ + 1):
+			for y in range(y0_, y1_ + 1):
+				if m[x][y] == '/':
+					m[x][y] = 'X'
+	# Fill outer using BFS
+	assert m[0][0] == '/'
+	frontier = {(0, 0)}
+	while frontier:
+		x, y = frontier.pop()
+		if m[x][y] != '/':
+			continue
+		m[x][y] = '.'
+		for dx, dy in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+			xx = x + dx
+			yy = y + dy
+			if xx in range(len(m)) and yy in range(len(m[0])):
+				frontier.add((xx, yy))
+	# Compute inner
+	for index, i in enumerate(m):
+		for jndex, j in enumerate(i):
+			if j == '/':
+				i[jndex] = 'X'
+	#print(*map(''.join, m), sep='\n')
+	def test(ix, iy, jx, jy):
+		x0_, x1_ = minmax(rx[ix], rx[jx])
+		y0_, y1_ = minmax(ry[jy], ry[iy])
+		for x in range(x0_, x1_ + 1):
+			for y in range(y0_, y1_ + 1):
+				if m[x][y] == '.':
+					return False
+		return True
+
+	for index, (ix, iy) in enumerate(p):
+		for (jx, jy) in p[:index]:
+			if test(ix, iy, jx, jy):
 				s = max(s, (abs(ix - jx) + 1) * (abs(iy - jy) + 1))
 	return s
 
