@@ -71,7 +71,7 @@ def part_2_bad(lines):
 		p.append(tuple(map(int, i.split(','))))
 	# p == [(7, 1), (11, 1), (11, 7), (9, 7), (9, 5), (2, 5), (2, 3), (7, 3)]
 	# p is circular. Move it such that p[0][0] is minimum.
-	index, _ = min(enumerate(p), key=lambda x: x[1])
+	index, _ = min(enumerate(p), key=lambda x: (x[1][0], -x[0]))
 	p = p[index:] + p[:index]
 	# p == [(2, 3), (7, 3), (7, 1), (11, 1), (11, 7), (9, 7), (9, 5), (2, 5)]
 	d = []
