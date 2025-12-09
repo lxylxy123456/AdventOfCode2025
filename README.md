@@ -14,11 +14,13 @@
 |[d06](d06)|[q.txt](d06/q.txt)|[ex.txt](d06/ex.txt)|[in.txt](d06/in.txt)|[s.py](d06/s.py)|[`BhjikR1j_GA`](https://youtu.be/BhjikR1j_GA)||
 |[d07](d07)|[q.txt](d07/q.txt)|[ex.txt](d07/ex.txt)|[in.txt](d07/in.txt)|[s.py](d07/s.py)|[`mgtnIJb2N6k`](https://youtu.be/mgtnIJb2N6k)||
 |[d08](d08)|[q.txt](d08/q.txt)|[ex.txt](d08/ex.txt)|[in.txt](d08/in.txt)|[s.py](d08/s.py)|[`y3iskSW1zuo`](https://youtu.be/y3iskSW1zuo)||
+|[d09](d09)|[q.txt](d09/q.txt)|[ex.txt](d09/ex.txt)|[in.txt](d09/in.txt)|[s.py](d09/s.py)|[`Y85JSiWARNQ`](https://youtu.be/Y85JSiWARNQ)||
 
 ## My time
 
 ```
 Day   -Part 1-   -Part 2-
+  9   00:02:07   00:55:20
   8   00:09:13   00:12:12
   7   00:04:00   00:05:28
   6   00:02:54   00:10:37
