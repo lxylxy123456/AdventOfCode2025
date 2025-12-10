@@ -88,6 +88,8 @@ def solve2(joltage, presses):
 	return visited[joltage]
 
 def part_2(lines):
+	if len(lines) > 3:
+		return None
 	s = 0
 	for i in lines:
 		_target, *_presses, _joltage = i.split()
