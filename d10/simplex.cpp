@@ -19,15 +19,11 @@
 #include "Simplex.hpp"
 
 #include <iostream>
-#include <vector>
-
-#include "LUPSolve.hpp"
-#include "utils.hpp"
 
 using namespace algorithms;
 
-void read_fraction(Fraction<int>& x) {
-	int v;
+void read_fraction(Fraction<long long int>& x) {
+	long long int v;
 	std::cin >> v;
 	x = v;
 }
@@ -41,7 +37,7 @@ int main(int argc, char *argv[]) {
 	// b[i] = counter i value
 	// b[i+m] = -b[i]
 	// c[j] = -1
-	using T = Fraction<int>;
+	using T = Fraction<long long int>;
 
 	size_t n, m;
 	std::cin >> n >> m;

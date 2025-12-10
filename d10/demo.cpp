@@ -18,12 +18,6 @@
 
 #include "Simplex.hpp"
 
-#include <iostream>
-#include <vector>
-
-#include "LUPSolve.hpp"
-#include "utils.hpp"
-
 using namespace algorithms;
 
 int main(int argc, char *argv[]) {

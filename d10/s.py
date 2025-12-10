@@ -112,6 +112,7 @@ def simplex_solver(n, m, A, b, c):
 	ibuf.append(' '.join(map(str, b)))
 	ibuf.append(' '.join(map(str, c)))
 	i = '\n'.join(ibuf).encode()
+	# TODO: make
 	from subprocess import check_output
 	o = check_output(['./simplex'], input=i)
 	x = list(map(Fraction, o.decode().split()))
@@ -163,8 +164,15 @@ def part_2(lines):
 		c = [-1] * n
 		x = simplex_solver(n, m, A, b, c)
 		su = sum(x)
-		print(x)
-		#assert su.as_integer_ratio()[1] == 1
+		if su.as_integer_ratio()[1] != 1:
+			m += 1
+			A.append([-1] * n)
+			b.append(-(int(su) + 1))
+			x = simplex_solver(n, m, A, b, c)
+			su = sum(x)
+			# TODO: assert all(map(lambda x: x.as_integer_ratio()[1] == 1, x))
+		print(su)
+		# TODO: use GMP?
 		s += su
 	return s
 
