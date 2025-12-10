@@ -2,6 +2,7 @@
 
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter, deque
+from fractions import Fraction
 #sys.setrecursionlimit(100000000)
 #A = list(map(int, input().split()))
 #T = int(input())
@@ -87,7 +88,7 @@ def solve2(joltage, presses):
 			border.append((j, d + 1))
 	return visited[joltage]
 
-def part_2(lines):
+def part_2_brute_force(lines):
 	s = 0
 	for i in lines:
 		_target, *_presses, _joltage = i.split()
@@ -98,6 +99,73 @@ def part_2(lines):
 		_j = re.fullmatch('\{([\d,]+)\}', _joltage).group(1)
 		joltage = tuple(map(int, _j.split(',')))
 		s += solve2(joltage, presses)
+	return s
+
+###
+
+def simplex_solver(n, m, A, b, c):
+	ibuf = []
+	ibuf.append(str(n))
+	ibuf.append(str(m))
+	for i in A:
+		ibuf.append(' '.join(map(str, i)))
+	ibuf.append(' '.join(map(str, b)))
+	ibuf.append(' '.join(map(str, c)))
+	i = '\n'.join(ibuf).encode()
+	from subprocess import check_output
+	o = check_output(['./simplex'], input=i)
+	x = list(map(Fraction, o.decode().split()))
+	return x
+
+def part_2(lines):
+	s = 0
+	for i in lines:
+		_target, *_presses, _joltage = i.split()
+		presses = []
+		for i in _presses:
+			_i = re.fullmatch('\(([\d,]+)\)', i).group(1)
+			presses.append(list(map(int, _i.split(','))))
+		_j = re.fullmatch('\{([\d,]+)\}', _joltage).group(1)
+		joltage = list(map(int, _j.split(',')))
+		# Remove joltage[i] == 0 because linear programming will generate /0
+		while 0 in joltage:
+			index = joltage.index(0)
+			assert joltage.pop(index) == 0
+			new_presses = []
+			for i in presses:
+				new_i = []
+				for j in i:
+					if j < index:
+						new_i.append(j)
+					elif j > index:
+						new_i.append(j - 1)
+				new_presses.append(new_i)
+			presses = new_presses
+		# n = number of buttons
+		# m = 2 * number of counters
+		# x[j] = how many times to press button j
+		# A[i][j] = whether counter i can be activated by button j
+		# A[i+m][j] = -A[i][j]
+		# b[i] = counter i value
+		# b[i+m] = -b[i]
+		# c[j] = -1
+		n = len(presses)
+		m = len(joltage) * 2
+		A = []
+		for i in range(len(joltage)):
+			A.append([0] * n)
+			A.append([0] * n)
+		for index, i in enumerate(presses):
+			for j in i:
+				A[j][index] = 1
+				A[j + len(joltage)][index] = -1
+		b = list(joltage) + list(map(operator.neg, joltage))
+		c = [-1] * n
+		x = simplex_solver(n, m, A, b, c)
+		su = sum(x)
+		print(x)
+		#assert su.as_integer_ratio()[1] == 1
+		s += su
 	return s
 
 if __name__ == '__main__':
