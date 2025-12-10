@@ -79,7 +79,11 @@ def solve2(joltage, presses):
 			continue
 		visited[a] = d
 		for i in presses:
-			border.append((switch2(a, i), d + 1))
+			j = switch2(a, i)
+			if any(map(lambda x, y: x > y, j, joltage)):
+				continue
+			border.append((j, d + 1))
+	print('2:', visited[joltage])
 	return visited[joltage]
 
 def part_2(lines):
