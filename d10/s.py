@@ -19,6 +19,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-1', '--one', action='store_true', help='Only part 1')
 	parser.add_argument('-2', '--two', action='store_true', help='Only part 2')
+	parser.add_argument('--test-scratch', action='store_true')
 	parser.add_argument('input_file', nargs='?')
 	args = parser.parse_args()
 	if args.input_file is not None:
@@ -29,7 +30,7 @@ def main():
 	if not args.two:
 		print(part_1(lines))
 	if not args.one:
-		print(part_2(lines))
+		print(part_2(lines, args.test_scratch))
 
 @functools.lru_cache
 def switch1(cur, press):
@@ -137,17 +138,36 @@ def check_linear_programming(n, m, A, b, c, x):
 def linear_programming_scratch(n, m, A, b, c):
 	A = A.copy()
 	b = b.copy()
+	c = c.copy()
+	assert c == [-1] * n
+	c = [-10000] * n
 	x = simplex_solver(n, m, A, b, c)
+	if all(map(lambda x: type(x) == int, x)):
+		return x
+	# Find t = ceil(sum(x))
 	su = sum(x)
-	if su.as_integer_ratio()[1] != 1:
+	if su.as_integer_ratio()[1] == 1:
+		t = int(su)
+	else:
+		t = int(su) + 1
 		m += 1
 		A.append([-1] * n)
-		b.append(-(int(su) + 1))
+		b.append(-t)
 		x = simplex_solver(n, m, A, b, c)
 		su = sum(x)
-		# TODO: assert all(map(lambda x: x.as_integer_ratio()[1] == 1, x))
-	check_linear_programming(n, m, A, b, c, x)
-	return x
+		if all(map(lambda x: type(x) == int, x)):
+			return x
+	#check_linear_programming(n, m, A, b, c, x)
+	y = linear_programming_scipy(n, m, A, b, c)
+	# TODO
+	if sum(x) != sum(y):
+		assert any(map(lambda x: type(x) != int, x))
+	if any(map(lambda x: type(x) != int, x)):
+		print()
+		print(sum(x), x, sum(map(lambda x, y: x * y, x, c)))
+		print(sum(y), y, sum(map(lambda x, y: x * y, y, c)))
+	#return x
+	return None
 
 def linear_programming_scipy(n, m, A, b, c):
 	import scipy
@@ -163,7 +183,7 @@ def linear_programming_scipy(n, m, A, b, c):
 	check_linear_programming(n, m, A, b, c, x)
 	return x
 
-def part_2(lines):
+def part_2(lines, test_scratch):
 	s = 0
 	for i in lines:
 		_target, *_presses, _joltage = i.split()
@@ -173,21 +193,6 @@ def part_2(lines):
 			presses.append(list(map(int, _i.split(','))))
 		_j = re.fullmatch('\{([\d,]+)\}', _joltage).group(1)
 		joltage = list(map(int, _j.split(',')))
-		if 0:
-			# Remove joltage[i] == 0 because linear programming will generate /0
-			while 0 in joltage:
-				index = joltage.index(0)
-				assert joltage.pop(index) == 0
-				new_presses = []
-				for i in presses:
-					new_i = []
-					for j in i:
-						if j < index:
-							new_i.append(j)
-						elif j > index:
-							new_i.append(j - 1)
-					new_presses.append(new_i)
-				presses = new_presses
 		# n = number of buttons
 		# m = 2 * number of counters
 		# x[j] = how many times to press button j
@@ -208,8 +213,10 @@ def part_2(lines):
 				A[j + len(joltage)][index] = -1
 		b = list(joltage) + list(map(operator.neg, joltage))
 		c = [-1] * n
-		#x = linear_programming_scratch(n, m, A, b, c)
 		x = linear_programming_scipy(n, m, A, b, c)
+		if test_scratch:
+			x1 = linear_programming_scratch(n, m, A, b, c)
+			assert x1 is None or sum(x) == sum(x1)
 		su = sum(x)
 		s += su
 	return s
