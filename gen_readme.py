@@ -90,7 +90,7 @@ for i in range(1, 13):
 			#youtube = get_youtube_link(d)
 			files.remove(i)
 			continue
-		if i in ['compute.sh']:
+		if i in ['compute.sh', '.gitignore']:
 			files.remove(i)
 			continue
 		if 1:
