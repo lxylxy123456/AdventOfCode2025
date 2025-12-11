@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Pip
       run: |
-        pip3 install sympy
+        pip3 install scipy
     - name: Build
       run: |
         for i in d*; do
