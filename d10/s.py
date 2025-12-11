@@ -103,6 +103,12 @@ def part_2_brute_force(lines):
 
 ###
 
+def int_or_fraction(s):
+	try:
+		return int(s)
+	except ValueError:
+		return Fraction(s)
+
 def simplex_solver(n, m, A, b, c):
 	ibuf = []
 	ibuf.append(str(n))
@@ -115,7 +121,46 @@ def simplex_solver(n, m, A, b, c):
 	# TODO: make
 	from subprocess import check_output
 	o = check_output(['./simplex'], input=i)
-	x = list(map(Fraction, o.decode().split()))
+	x = list(map(int_or_fraction, o.decode().split()))
+	return x
+
+def check_linear_programming(n, m, A, b, c, x):
+	assert len(A) == m
+	assert len(A[0]) == n
+	assert len(b) == m
+	assert len(c) == n
+	assert len(x) == n
+	#print(sum(x), x)
+	for i in range(m):
+		assert sum(map(operator.mul, A[i], x)) <= b[i]
+
+def linear_programming_scratch(n, m, A, b, c):
+	A = A.copy()
+	b = b.copy()
+	x = simplex_solver(n, m, A, b, c)
+	su = sum(x)
+	if su.as_integer_ratio()[1] != 1:
+		m += 1
+		A.append([-1] * n)
+		b.append(-(int(su) + 1))
+		x = simplex_solver(n, m, A, b, c)
+		su = sum(x)
+		# TODO: assert all(map(lambda x: x.as_integer_ratio()[1] == 1, x))
+	check_linear_programming(n, m, A, b, c, x)
+	return x
+
+def linear_programming_scipy(n, m, A, b, c):
+	import scipy
+	A_eq = A[:m//2]
+	b_eq = b[:m//2]
+	c_neg = list(map(operator.neg, c))
+	ans = scipy.optimize.linprog(c=c_neg, A_eq=A_eq, b_eq=b_eq, integrality=1)
+	x = list(map(round, ans.x))
+	#print('A', *A_eq, sep='\n')
+	#print('b', b_eq)
+	#print('c', c)
+	#print('x', x)
+	check_linear_programming(n, m, A, b, c, x)
 	return x
 
 def part_2(lines):
@@ -128,20 +173,21 @@ def part_2(lines):
 			presses.append(list(map(int, _i.split(','))))
 		_j = re.fullmatch('\{([\d,]+)\}', _joltage).group(1)
 		joltage = list(map(int, _j.split(',')))
-		# Remove joltage[i] == 0 because linear programming will generate /0
-		while 0 in joltage:
-			index = joltage.index(0)
-			assert joltage.pop(index) == 0
-			new_presses = []
-			for i in presses:
-				new_i = []
-				for j in i:
-					if j < index:
-						new_i.append(j)
-					elif j > index:
-						new_i.append(j - 1)
-				new_presses.append(new_i)
-			presses = new_presses
+		if 0:
+			# Remove joltage[i] == 0 because linear programming will generate /0
+			while 0 in joltage:
+				index = joltage.index(0)
+				assert joltage.pop(index) == 0
+				new_presses = []
+				for i in presses:
+					new_i = []
+					for j in i:
+						if j < index:
+							new_i.append(j)
+						elif j > index:
+							new_i.append(j - 1)
+					new_presses.append(new_i)
+				presses = new_presses
 		# n = number of buttons
 		# m = 2 * number of counters
 		# x[j] = how many times to press button j
@@ -162,17 +208,9 @@ def part_2(lines):
 				A[j + len(joltage)][index] = -1
 		b = list(joltage) + list(map(operator.neg, joltage))
 		c = [-1] * n
-		x = simplex_solver(n, m, A, b, c)
+		#x = linear_programming_scratch(n, m, A, b, c)
+		x = linear_programming_scipy(n, m, A, b, c)
 		su = sum(x)
-		if su.as_integer_ratio()[1] != 1:
-			m += 1
-			A.append([-1] * n)
-			b.append(-(int(su) + 1))
-			x = simplex_solver(n, m, A, b, c)
-			su = sum(x)
-			# TODO: assert all(map(lambda x: x.as_integer_ratio()[1] == 1, x))
-		print(su)
-		# TODO: use GMP?
 		s += su
 	return s
 
