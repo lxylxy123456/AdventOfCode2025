@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Pip
       run: |
         pip3 install scipy
-    - name: Build
+    - name: Compute
       run: |
         for i in d*; do
           time ./compute.sh $i
