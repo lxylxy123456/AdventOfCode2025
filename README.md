@@ -16,11 +16,13 @@
 |[d08](d08)|[q.txt](d08/q.txt)|[ex.txt](d08/ex.txt)|[in.txt](d08/in.txt)|[s.py](d08/s.py)|[`y3iskSW1zuo`](https://youtu.be/y3iskSW1zuo)||
 |[d09](d09)|[q.txt](d09/q.txt)|[ex.txt](d09/ex.txt), [1](d09/ex1.txt)|[in.txt](d09/in.txt)|[s.py](d09/s.py)|[`Y85JSiWARNQ`](https://youtu.be/Y85JSiWARNQ)|[ori.py](d09/ori.py)|
 |[d10](d10)|[q.txt](d10/q.txt)|[ex.txt](d10/ex.txt)|[in.txt](d10/in.txt)|[s.py](d10/s.py), [1](d10/s1.py)|[`lg6CRz3gV28`](https://youtu.be/lg6CRz3gV28)|[.gitignore](d10/.gitignore), [Makefile](d10/Makefile), [demo](d10/demo), [demo.cpp](d10/demo.cpp), [include](d10/include), [simplex](d10/simplex), [simplex.cpp](d10/simplex.cpp)|
+|[d11](d11)|[q.txt](d11/q.txt)|[ex.txt](d11/ex.txt), [2](d11/ex2.txt)|[in.txt](d11/in.txt)|[s.py](d11/s.py)|[`fDAw3lO2u2Q`](https://youtu.be/fDAw3lO2u2Q)||
 
 ## My time
 
 ```
 Day   -Part 1-   -Part 2-
+ 11   00:02:30   00:12:15
  10   00:10:52   22:27:08
   9   00:02:07   00:55:20
   8   00:09:13   00:12:12
