@@ -4,6 +4,11 @@ set -xeo pipefail
 
 cd "$1"
 
+if [ -f "./compute.sh" ]; then
+	./compute.sh
+	exit
+fi
+
 TMPD="$(mktemp -d)"
 
 grep '^Your puzzle answer was' q.txt | cut -d ' ' -f 5- \

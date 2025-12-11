@@ -8,3 +8,7 @@ all: $(TARGETS)
 
 $(TARGETS): %: %.cpp include/*.hpp
 
+.PHONY: clean
+clean:
+	rm -f $(TARGETS)
+

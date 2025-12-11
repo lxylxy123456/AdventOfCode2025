@@ -143,31 +143,41 @@ def linear_programming_scratch(n, m, A, b, c):
 	c = [-10000] * n
 	x = simplex_solver(n, m, A, b, c)
 	if all(map(lambda x: type(x) == int, x)):
+		check_linear_programming(n, m, A, b, c, x)
 		return x
 	# Find t = ceil(sum(x))
 	su = sum(x)
-	if su.as_integer_ratio()[1] == 1:
-		t = int(su)
-	else:
+	if su.as_integer_ratio()[1] != 1:
 		t = int(su) + 1
 		m += 1
 		A.append([-1] * n)
-		b.append(-t)
+		b.append(-(int(su) + 1))
 		x = simplex_solver(n, m, A, b, c)
 		su = sum(x)
 		if all(map(lambda x: type(x) == int, x)):
+			check_linear_programming(n, m, A, b, c, x)
 			return x
-	#check_linear_programming(n, m, A, b, c, x)
+	# If this function returns above, the Simplex algorithm happens to find an
+	# integer solution. However, if we get unlucky and Simplex gives a
+	# fractional number, it is difficult to decide whether it is valid.
+	# In my input data line 159 (ends with "{144,52,32,81,84,65,42}") can be
+	# simplified as:
+	#   [.......] (0) (3,4) (1,4) (0,2,3) (0,1,3) (2,3,4) {2,1,1,2,1}
+	# scipy gives:
+	#   x =        1    0     0      0       1       1
+	# Simplex gives:
+	#   x =       .5   .5    .5      1      .5       0
+	# However, both sum to 3.
+	# Here we give up and return None.
+	return None
+	# Dead code below
 	y = linear_programming_scipy(n, m, A, b, c)
-	# TODO
 	if sum(x) != sum(y):
 		assert any(map(lambda x: type(x) != int, x))
 	if any(map(lambda x: type(x) != int, x)):
 		print()
 		print(sum(x), x, sum(map(lambda x, y: x * y, x, c)))
 		print(sum(y), y, sum(map(lambda x, y: x * y, y, c)))
-	#return x
-	return None
 
 def linear_programming_scipy(n, m, A, b, c):
 	import scipy
@@ -185,6 +195,8 @@ def linear_programming_scipy(n, m, A, b, c):
 
 def part_2(lines, test_scratch):
 	s = 0
+	if test_scratch:
+		scratch_count = 0
 	for i in lines:
 		_target, *_presses, _joltage = i.split()
 		presses = []
@@ -216,9 +228,13 @@ def part_2(lines, test_scratch):
 		x = linear_programming_scipy(n, m, A, b, c)
 		if test_scratch:
 			x1 = linear_programming_scratch(n, m, A, b, c)
-			assert x1 is None or sum(x) == sum(x1)
+			if x1 is not None:
+				assert sum(x) == sum(x1)
+				scratch_count += 1
 		su = sum(x)
 		s += su
+	if test_scratch:
+		assert scratch_count / len(lines) > 0.8
 	return s
 
 if __name__ == '__main__':
