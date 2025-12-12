@@ -13,7 +13,7 @@ TMPD="$(mktemp -d)"
 
 grep '^Your puzzle answer was' q.txt | cut -d ' ' -f 5- \
 	| grep -oE '[0-9a-z,]+' > "$TMPD/expected"
-if [ "$(basename "$PWD")" = "d25" ]; then
+if [ "$(basename "$PWD")" = "d12" ]; then
 	diff <(wc -l < "$TMPD/expected") <(echo 1)
 else
 	diff <(wc -l < "$TMPD/expected") <(echo 2)

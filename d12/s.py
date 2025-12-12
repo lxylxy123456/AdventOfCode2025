@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/_vvqZeJl3tE
+
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter, deque
 #sys.setrecursionlimit(100000000)
@@ -49,6 +51,13 @@ def part_1(lines):
 		assert ratio < 0.8 or ratio > 1
 		if ratio < 0.8:
 			s += 1
+			# Added after solving the problem.
+			need = sum(ns)
+			available = (w // 3) * (h // 3)
+			assert need <= available
+		else:
+			# Added after solving the problem.
+			assert require > space
 	return s
 
 def part_2(lines):

@@ -17,6 +17,7 @@
 |[d09](d09)|[q.txt](d09/q.txt)|[ex.txt](d09/ex.txt), [1](d09/ex1.txt)|[in.txt](d09/in.txt)|[s.py](d09/s.py)|[`Y85JSiWARNQ`](https://youtu.be/Y85JSiWARNQ)|[ori.py](d09/ori.py)|
 |[d10](d10)|[q.txt](d10/q.txt)|[ex.txt](d10/ex.txt)|[in.txt](d10/in.txt)|[s.py](d10/s.py), [1](d10/s1.py)|[`lg6CRz3gV28`](https://youtu.be/lg6CRz3gV28)|[Makefile](d10/Makefile), [demo.cpp](d10/demo.cpp), [include](d10/include), [simplex.cpp](d10/simplex.cpp)|
 |[d11](d11)|[q.txt](d11/q.txt)|[ex.txt](d11/ex.txt), [2](d11/ex2.txt)|[in.txt](d11/in.txt)|[s.py](d11/s.py)|[`fDAw3lO2u2Q`](https://youtu.be/fDAw3lO2u2Q)||
+|[d12](d12)|[q.txt](d12/q.txt)|[ex.txt](d12/ex.txt)|[in.txt](d12/in.txt)|[s.py](d12/s.py)|[`_vvqZeJl3tE`](https://youtu.be/_vvqZeJl3tE)||
 
 ## My time
 
